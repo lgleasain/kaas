@@ -1,5 +1,45 @@
-KAAS: Keynote as a Service
+KAAS: Keynote as a Service -- Google Glass edition
 ==========================
+
+
+Preface
+-------
+
+Do you give presentations with Keynote and want to be able to show your speakernotes on your glass as you give a presentation.  If so then this is the app for you.
+
+NOTE:  This app only works if you control the presentation from your Glass or via a small web app that we created to be able to control it via a Logitech R400.  Currently web app responds to the page up and page down keys that this is mapped to,  but can be easilly modified to respond to other actions.
+
+This is a heavilly modified version of the KAAS project originally written by  Christopher Neugebauer.  If you are not trying to use Keynote with Google Glass you are advised to go the the repository that this was forked from.  This is a Proof of Concept that I am going to be testing while giving presentations.  Right now it depends on using the Wearscript app.  If people like this long term I will port this to a native Glass (Android) app,  create a proper installer and explore integrations with other presentation tools like impress.js.  If you have any ideas or want to help out with this send me a message!
+
+Also please note that this is a prototype and that the code is not as clean as my Ruby Gems.  I have tried to clean things up wherever I can,  but I am not a Python programmer.  If you are one and have some ideas on how to make this better and add unit test I would love to pair with you to learn how to make it better.
+
+
+Installation
+------------
+You will need to be on OSX,  have Keynote 5.1 (there are some changes that have happened in 6.0 that I didn't have time to figure out),  and will need to be using Wearscript and have the wearscript python packages installed.  See http://www.wearscript.com/en/latest/ for instructions on installing wearscript on your Glass and getting started.  
+
+
+Usage
+-----
+
+The app uses websockets to communicate with the backend service.  To use it make sure that you have installed the server and that it is running on our Mac.  You can run it via "python kaas/remote_server.py server 4000".  Configure your Glass to be on the same network as your Mac via the wifi settings.  You will see a line in the wearscript.html file with WS.connect.  Add in the ip address and the port of your server where it asks for that.  If you use the command above to start it the port will be 4000. You will need to copy the wearscript.html file into your wearscript playground editor,  start up the wearscript app and then execute the script.
+
+On your Mac you will need to have Keynote 5.1 running.  Also you will need to have the presentation loaded that you want to work with and start the presentation.  Because of limitations with the Keynote API you need to make sure that you start the presentation on slide 1.
+
+The first slides notes will not show unless you swipe back and then forward once on your glass.  After that you will see your notes as you swipe through the presentation.  There are two ways to control your presentation.  One is via a swipe motion on your glass.  The other is by going to http://your_server_ip_address:8000/kontroller.html and using a logitech remote or the page up and page down keys on another computer.  
+
+Also,  the app currently doesn't automtically resize the text to fit more on the screen.  I have included a few styles and header options in the wearscript to get you going.  Feel free to modify the css and html to fit your particular use case.  The app uses the document.getElementById to add the speaker notes as text into your view.
+
+
+Original Documentation
+======================
+
+
+Note
+----
+
+Some of the original features in Kaas have been disabled in this version such as the security and the ability to select different versions of Keynote.  The code for doing this has been somewhat left in place for the time being.
+
 
 Introduction
 ------------

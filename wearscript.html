@@ -1,0 +1,60 @@
+<html style="width:100%; height:100%; overflow:hidden">
+<head>
+<!-- You can include external scripts here like so... -->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.0/zepto.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>-->
+<link href='http://fonts.googleapis.com/css?family=Roboto:400,100,300' rel='stylesheet' type='text/css'>
+    
+</head>
+<style>
+body {background-color: black;}
+.h1 {color:white; font-size: 100px; font-family: 'Roboto', sans-serif; font-weight: 100;}
+.h2 {color:white; font-size: 70px; font-family: 'Roboto', sans-serif; font-weight: 100;}
+.h3 {color:white; font-size: 40px; font-family: 'Roboto', sans-serif; font-weight: 400;}    
+</style>
+<body style="width:640px; height:360px; overflow:hidden; margin:0">
+<div id="notes">
+  <div class='h1' id='h1'>hello</div>
+  <div class='h2' id='h2'>hello</div>
+  <br/>
+  <div class='h3' id='h3'>hello</div>
+</div>
+<script>
+function server() {
+    WS.log('Welcome to Keynote For Glass');
+    WS.say('Lets do this');
+    WS.sound('SUCCESS')
+
+    WS.serverConnect('ws://your_server_ip_and_port_here', function () {
+        WS.subscribe('pong', function (chan, card_text, timestamp1, groupDevice) {
+            document.getElementById('h2').innerHTML=card_text;
+        });
+
+        // this displays the timer at the bottom
+        setInterval(function () {
+            var date = new Date;
+            temp_hours = date.getHours().toString();
+            hours = ('00' + date.getHours().toString()).substring(temp_hours.length, 2 + temp_hours.length);
+            temp_minutes = date.getMinutes().toString();
+            minutes = ('00' + date.getMinutes().toString()).substring(temp_minutes.length, 2 + temp_minutes.length);
+            temp_seconds = date.getSeconds().toString();
+            seconds = ('00' + date.getSeconds().toString()).substring(temp_seconds.length, 2 + temp_seconds.length);            
+            var time_string = hours + ':' + minutes + ':' + seconds;
+            document.getElementById('h3').innerHTML=time_string;
+        }, 250);
+        WS.gestureCallback('onGesture', function (name) {
+            WS.publish('ping', name, '');
+        });
+    })
+
+}
+function main() {
+    if (WS.scriptVersion(1)) return;
+    //ctx = document.getElementById('canvas').getContext("2d");
+    WS.serverConnect('{{WSUrl}}', server);
+}
+window.onload = main;
+</script>
+</body>
+</html>
+

@@ -23,22 +23,22 @@ import StringIO
 
 #response, content_type, body = remote_handler.handle(self.path.split('/')[1:])
 
-def handle(path, show):
+def handle(path, show, ws):
 
     command_type = path[0]
 
     try:
-        return HANDLERS[command_type](path, show)
+        return HANDLERS[command_type](path, show, ws)
     except KeyError:
         return (404, "text/plain", "No such URL: " + "/".join(path))
 
 
 
-def handle_go(path, show):
+def handle_go(path, show, ws):
     return (404, "text/plain", "lol")
 
 
-def handle_html(path, show):
+def handle_html(path, show, ws):
 
     if len(path) > 1:
         next = path[1].strip()
@@ -69,8 +69,8 @@ def handle_html(path, show):
 
     return (200, "text/html; charset=utf-8", output)
 
-def handle_json(path, show):
-    return remote_json.handle(path, show)
+def handle_json(path, show, ws):
+    return remote_json.handle(path, show, ws)
 
 
 

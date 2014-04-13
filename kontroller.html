@@ -1,0 +1,41 @@
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular-resource.min.js"></script>
+<script>
+    // note that ng-keydown is available since angular 1.1.5
+    angular.module('KaasModule', ['KaasModule.services', 'KaasModule.controllers']);
+    angular.module('KaasModule.services', ['ngResource']);
+    angular.module('KaasModule.controllers', []);
+    angular.module('KaasModule.services').factory('PreviousSlideService',
+    ['$resource', '$location', function($resource, $location){
+      previous_slide_service = $resource('/json/previous');
+      return previous_slide_service;
+    }]);
+    angular.module('KaasModule.services').factory('NextSlideService',
+    ['$resource', '$location', function($resource, $location){
+      next_slide_service = $resource('/json/next');
+      return next_slide_service;
+    }]);
+    angular.module('KaasModule.controllers').controller('KaasController', 
+    ['$scope', 'PreviousSlideService', 'NextSlideService',
+    function($scope, PreviousSlideService, NextSlideService){
+        console.log(PreviousSlideService);
+        $scope.myFunct = function(ev) {
+          $scope.pressed = ev.which;
+          if($scope.pressed == 33){
+            console.log(PreviousSlideService);
+            PreviousSlideService.get();
+          }else if($scope.pressed == 34){
+            NextSlideService.get();
+        }
+        if (ev.which==13)
+            alert('Stop hitting return :p');
+        };
+    }]);  
+
+</script>
+<body ng-controller="KaasController" ng-keydown="myFunct($event)">
+   Key pressed: {{pressed}}
+</body>
+<script>
+    angular.bootstrap(document, ["KaasModule"]);
+</script>

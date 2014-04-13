@@ -18,7 +18,9 @@
 
 import json
 
-def handle(path, show):
+WS=''
+
+def handle(path, show, websocket):
 
     status = 200
     try:
@@ -26,6 +28,14 @@ def handle(path, show):
     except AttributeError:
         status = 404
         output = "No such path: " + "/".join(path)
+
+    output_ucode = json.dumps(output, ensure_ascii = False, indent = 2).encode("UTF-8")
+    return (status, "application/json; charset=UTF-8", output_ucode)
+
+def handle_glass(method, show):
+    
+    status = 200
+    output = Handlers(show).handle(method, '')
 
     output_ucode = json.dumps(output, ensure_ascii = False, indent = 2).encode("UTF-8")
     return (status, "application/json; charset=UTF-8", output_ucode)
@@ -76,12 +86,20 @@ class Handlers(object):
         ''' Shows the next slide, returns the current_state '''
 
         self.show.next()
+        slide_number = self.show.current_slide
+        notes = self.show.notes(slide_number)
+        print notes
+        WS.publish('pong', notes, '', WS.group_device)
         return self.current_state(path)
 
     def previous(self, path):
         ''' Shows the previous slide, returns the current_state '''
 
         self.show.previous()
+        slide_number = self.show.current_slide
+        notes = self.show.notes(slide_number)
+        print notes
+        WS.publish('pong', notes, '', WS.group_device)
         return self.current_state(path)
 
     def start(self, path):
